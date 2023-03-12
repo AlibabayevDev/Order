@@ -1,14 +1,14 @@
-﻿using System;
+﻿using Order.Core.Domain.Abstract;
+using Order.Core.Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using PaymentOrder.Core.Domain.Abstract;
-using PaymentOrder.Core.Domain.Entities;
 
-namespace PaymentOrder.Core.DataAccess.Sql
+namespace Order.Core.DataAccess.Sql
 {
     public class SqlProviderRepository : IProviderRepository
     {
@@ -19,7 +19,7 @@ namespace PaymentOrder.Core.DataAccess.Sql
             _connect = connect;
         }
 
-        public void Add(Provider resident)
+        public void Add(ProviderEntity resident)
         {
             using (var connection = new SqlConnection(_connect))
             {
@@ -60,7 +60,7 @@ namespace PaymentOrder.Core.DataAccess.Sql
             }
         }
 
-        public void Update(Provider resident)
+        public void Update(ProviderEntity resident)
         {
             using (var connection = new SqlConnection(_connect))
             {
@@ -101,7 +101,7 @@ namespace PaymentOrder.Core.DataAccess.Sql
             }
         }
 
-        public List<Provider> GetAll()
+        public List<ProviderEntity> GetAll()
         {
             using (var connection = new SqlConnection(_connect))
             {
@@ -109,10 +109,10 @@ namespace PaymentOrder.Core.DataAccess.Sql
                 string query = "select * from Residents where IsDeleted=0";
                 var command = new SqlCommand(query, connection);
                 var reader = command.ExecuteReader();
-                var list = new List<Provider>();
+                var list = new List<ProviderEntity>();
                 while (reader.Read())
                 {
-                    var resident = new Provider();
+                    var resident = new ProviderEntity();
                     list.Add(resident);
                 }
 
@@ -120,7 +120,7 @@ namespace PaymentOrder.Core.DataAccess.Sql
             }
         }
 
-        public Provider Get(int id)
+        public ProviderEntity Get(int id)
         {
             using (var connection = new SqlConnection(_connect))
             {
@@ -131,7 +131,7 @@ namespace PaymentOrder.Core.DataAccess.Sql
                 var reader = command.ExecuteReader();
                 if (reader.Read())
                 {
-                    var resident = new Provider();
+                    var resident = new ProviderEntity();
                     return resident;
                 }
                 else

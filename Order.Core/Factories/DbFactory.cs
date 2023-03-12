@@ -1,12 +1,7 @@
-﻿using PaymentOrder.Core.DataAccess.Sql;
-using PaymentOrder.Core.Domain.Abstract;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Order.Core.DataAccess.Sql;
+using Order.Core.Domain.Abstract;
 
-namespace PaymentOrder.Core.Factories
+namespace Order.Core.Factories
 {
     public class DbFactory
     {

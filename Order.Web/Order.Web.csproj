@@ -4,4 +4,8 @@
     <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Order.WebCore\Order.WebCore.csproj" />
+  </ItemGroup>
+
 </Project>

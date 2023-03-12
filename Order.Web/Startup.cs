@@ -49,7 +49,9 @@ namespace Order.Web
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapRazorPages();
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Order}/{action=Index}/{id?}");
             });
         }
     }

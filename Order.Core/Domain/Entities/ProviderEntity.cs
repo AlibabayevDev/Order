@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Order.Core.Domain.Entities
 {
-    public abstract class BaseEntity
+    public class ProviderEntity : BaseEntity
     {
-        public int Id { get; set; }
+        public string Name { get; set; }
     }
 }

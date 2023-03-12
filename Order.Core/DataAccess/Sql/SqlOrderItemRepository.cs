@@ -1,8 +1,8 @@
-﻿using System.Data.SqlClient;
-using PaymentOrder.Core.Domain.Abstract;
-using PaymentOrder.Core.Domain.Entities;
+﻿using Order.Core.Domain.Abstract;
+using Order.Core.Domain.Entities;
+using System.Data.SqlClient;
 
-namespace PaymentOrder.Core.DataAccess.Sql
+namespace Order.Core.DataAccess.Sql
 {
     public class SqlOrderItemRepository : IOrderItemRepository
     {
@@ -13,7 +13,7 @@ namespace PaymentOrder.Core.DataAccess.Sql
             _connect = connect;
         }
 
-        public void Add(OrderItem bankBranch)
+        public void Add(OrderItemEntity bankBranch)
         {
             using (var connection = new SqlConnection(_connect))
             {
@@ -35,7 +35,7 @@ namespace PaymentOrder.Core.DataAccess.Sql
             }
         }
 
-        public void Update(OrderItem bankBranch)
+        public void Update(OrderItemEntity bankBranch)
         {
             using (var connection = new SqlConnection(_connect))
             {
@@ -59,7 +59,7 @@ namespace PaymentOrder.Core.DataAccess.Sql
             }
         }
 
-        public List<OrderItem> GetAll()
+        public List<OrderItemEntity> GetAll()
         {
             using (var connection = new SqlConnection(_connect))
             {
@@ -68,11 +68,11 @@ namespace PaymentOrder.Core.DataAccess.Sql
                 string query = "select BankBranchs.Id,BankBranchs.BankId,Banks.Name as BankName,BankBranchs.Name,BankBranchs.Phone,BankBranchs.Fax,BankBranchs.Address,BankBranchs.CreatorId,BankBranchs.ModifiedDate,BankBranchs.IsDeleted from BankBranchs inner join Banks on BankBranchs.BankId=Banks.Id where BankBranchs.IsDeleted = 0";
                 var command = new SqlCommand(query, connection);
                 var reader = command.ExecuteReader();
-                var list = new List<OrderItem>();
+                var list = new List<OrderItemEntity>();
 
                 while (reader.Read())
                 {
-                    var bankBranch = new OrderItem();
+                    var bankBranch = new OrderItemEntity();
                     list.Add(bankBranch);
                 }
 
@@ -80,7 +80,7 @@ namespace PaymentOrder.Core.DataAccess.Sql
             }
         }
 
-        public OrderItem Get(int id)
+        public OrderItemEntity Get(int id)
         {
             using (var connection = new SqlConnection(_connect))
             {
@@ -96,7 +96,7 @@ namespace PaymentOrder.Core.DataAccess.Sql
 
                 if (reader.Read())
                 {
-                    var bankBranch = new OrderItem();
+                    var bankBranch = new OrderItemEntity();
                     return bankBranch;
                 }
                 else

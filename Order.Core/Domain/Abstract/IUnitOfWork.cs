@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PaymentOrder.Core.Domain.Abstract
+namespace Order.Core.Domain.Abstract
 {
     public interface IUnitOfWork
     {

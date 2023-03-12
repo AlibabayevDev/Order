@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Order.Core.Domain.Abstract;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PaymentOrder.Core.Domain.Abstract;
 
-namespace PaymentOrder.Core.DataAccess.Sql
+namespace Order.Core.DataAccess.Sql
 {
     public class SqlUnitOfWork:IUnitOfWork
     {

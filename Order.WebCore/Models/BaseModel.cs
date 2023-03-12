@@ -1,4 +1,4 @@
-﻿namespace PaymentOrder.WebCore.Models
+﻿namespace Order.WebCore.Models
 {
     public class BaseModel
     {

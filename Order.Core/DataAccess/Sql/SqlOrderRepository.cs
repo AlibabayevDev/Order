@@ -1,13 +1,13 @@
-﻿using System;
+﻿using Order.Core.Domain.Abstract;
+using Order.Core.Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PaymentOrder.Core.Domain.Abstract;
-using PaymentOrder.Core.Domain.Entities;
 
-namespace PaymentOrder.Core.DataAccess.Sql
+namespace Order.Core.DataAccess.Sql
 {
     public class SqlOrderRepository:IOrderRepository
     {
@@ -17,80 +17,81 @@ namespace PaymentOrder.Core.DataAccess.Sql
         {
             _connect = connect;
         }
-        public void Add(Order bank)
+        public void Add(OrderEntity bank)
         {
             using (var connection=new SqlConnection(_connect))
             {
                 connection.Open();
-                string query = "Insert into Banks output inserted.id values(@Name,@VOEN,@CorrespondentAccount,@SWIFT,@CreatorId,@modifiedDate,@IsDeleted)";
+                string query = "Insert into Order output inserted.id values(@Number,@Date,@ProviderId)";
                 var command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("name", bank.Name);
-                command.Parameters.AddWithValue("voen", bank.VOEN);
-                command.Parameters.AddWithValue("correspondentaccount", bank.CorrespondentAccount);
-                command.Parameters.AddWithValue("swift", bank.SWIFT);
-                command.Parameters.AddWithValue("creatorid", bank.CreatorId);
-                command.Parameters.AddWithValue("modifiedDate", bank.ModifiedDate);
-                command.Parameters.AddWithValue("isdeleted", bank.IsDeleted);
+                command.Parameters.AddWithValue("Id", bank.Id);
+                command.Parameters.AddWithValue("Number", bank.Number);
+                command.Parameters.AddWithValue("Date", bank.Date);
+                command.Parameters.AddWithValue("ProviderId", bank.ProviderId);
                 bank.Id = Convert.ToInt32(command.ExecuteScalar());
             }
         }
 
-        public void Update(Order bank)
+        public void Update(OrderEntity bank)
         {
             using (var connection = new SqlConnection(_connect))
             {
                 connection.Open();
-                string query =
-                    "update Banks set Name=@name,VOEN=@voen,CorresPondentAccount=@correspondentaccount,SWIFT=@swift,CreatorId=@creatorid,modifiedDate=@modifiedDate,IsDeleted=@isdeleted where Id=@id";
+                string query = "update Order set Number=@Number,Date=@Date,ProviderId=@ProviderId where Id=@id";
                 var command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("id", bank.Id);
-                command.Parameters.AddWithValue("name", bank.Name);
-                command.Parameters.AddWithValue("voen", bank.VOEN);
-                command.Parameters.AddWithValue("correspondentaccount", bank.CorrespondentAccount);
-                command.Parameters.AddWithValue("swift", bank.SWIFT);
-                command.Parameters.AddWithValue("creatorid", bank.CreatorId);
-                command.Parameters.AddWithValue("modifiedDate", bank.ModifiedDate);
-                command.Parameters.AddWithValue("isdeleted", bank.IsDeleted);
+                command.Parameters.AddWithValue("Id", bank.Id);
+                command.Parameters.AddWithValue("Number", bank.Number);
+                command.Parameters.AddWithValue("Date", bank.Date);
+                command.Parameters.AddWithValue("ProviderId", bank.ProviderId);
                 command.ExecuteNonQuery();
             }
         }
 
-        public List<Order> GetAll()
+        public List<OrderEntity> GetAll()
         {
             using (var connection = new SqlConnection(_connect))
             {
                 connection.Open();
-                string query = "select * from Banks where IsDeleted = 0";
-                var command = new SqlCommand(query, connection);
-                var reader = command.ExecuteReader();
-                var list = new List<Order>();
-                while (reader.Read())
+                string query = "select * from Order";
+                using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                   var bank = new Order();
-                   list.Add(bank);
-                }
+                    SqlDataReader reader = command.ExecuteReader();
+                    List<OrderEntity> orders = new List<OrderEntity>();
+                    while (reader.Read())
+                    {
+                        OrderEntity entity = new OrderEntity();
+                        entity.Id = Convert.ToInt32(reader["Id"]);
+                        entity.Number = Convert.ToString(reader["Number"]);
+                        entity.Date = Convert.ToDateTime(reader["Date"]);
+                        entity.ProviderId = Convert.ToInt32(reader["ProviderId"]);
+                        orders.Add(entity);
+                    }
 
-                return list;
+                    return orders;
+                }
             }
         }
 
-        public Order Get(int id)
+        public OrderEntity Get(int id)
         {
             using (var connection = new SqlConnection(_connect))
             {
                 connection.Open();
-                string query = "select * from Banks where Id= @id and IsDeleted = 0";
-                var command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("Id", id);
-                var reader = command.ExecuteReader();
-                if (reader.Read())
+                string query = "select * from Order where Id= @id";
+                using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    var bank = new Order();
-                    return bank;
-                }
-                else
-                {
-                    return null;
+                    command.Parameters.AddWithValue("Id", id);
+                    SqlDataReader reader = command.ExecuteReader();
+                    OrderEntity entity = new OrderEntity();
+                    while (reader.Read())
+                    {
+                        entity.Id = Convert.ToInt32(reader["Id"]);
+                        entity.Number = Convert.ToString(reader["Number"]);
+                        entity.Date = Convert.ToDateTime(reader["Date"]);
+                        entity.ProviderId = Convert.ToInt32(reader["ProviderId"]);
+
+                    }
+                    return entity;
                 }
             }
         }
@@ -100,11 +101,10 @@ namespace PaymentOrder.Core.DataAccess.Sql
             using (var connection = new SqlConnection(_connect))
             {
                 connection.Open();
-                string query = "delete from Banks where Id=@id";
+                string query = "delete from Order where Id=@id";
                 var command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("Id", id);
                 command.ExecuteNonQuery();
-
             }
         }
 

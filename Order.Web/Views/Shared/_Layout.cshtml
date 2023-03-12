@@ -1,0 +1,125 @@
+﻿@using WasherWeb.Areas.Owners.Models;
+
+@{
+    Layout = null;
+    List<CommonMenuModel> menuOrders = new List<CommonMenuModel>();
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+
+    <link rel="shortcut icon" href="~/images/logos/Ecosteamobile-01.png">
+    <link href="~/images/logos/Ecosteamobile-01.png" rel="apple-touch-icon">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="~/DataTables/datatables.min.css" />
+    <link rel="stylesheet" href="~/css/pagination.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="~/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="~/css/layout.css" />
+    <link rel="stylesheet" href="~/css/text-editor.css" />
+    <link rel="stylesheet" href="~/css/admin.crud.css">
+    <link rel="stylesheet" href="~/css/warninganimation.css">
+    <link rel="stylesheet" href="~/css/progress.css">
+
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+
+    <script type="text/javascript" src="~/DataTables/datatables.min.js"></script>
+
+    @RenderSection("HeadArea", false)
+</head>
+
+<body style="overflow-x:hidden;overflow-y:auto">
+    <partial name="Header" />
+
+    <div class="container-flud h-100 pt-5">
+        <div class="row h-100">
+            <div id="sidebar" class="col-sm-12 col-md-3 col-lg-2 col-xl-2">
+                <div class="list-group list-group-flush">
+                    @{
+                        int count = 0;
+                        menuOrders.Add(new MenuModel(count++, "Banks", "Index", "Bank"));
+                        menuOrders.Add(new MenuModel(count++, "Bank Branches", "Index", "BankBranch"));
+                    }
+
+                    @foreach (var menu in menuOrders)
+                    {
+                        if (menu is ParentMenuModel parentMenuModel)
+                        {
+                            <span class="list-group-item list-group-item-action">@parentMenuModel.Name</span>
+                            <ul id="myUL">
+                                <li>
+                                    <ul class="nested">
+                                        @foreach (var childMenu in parentMenuModel.ChildModels)
+                                        {
+                                            <li>
+                                                <a asp-action="@childMenu.Action" asp-controller="@childMenu.Controller" class="sequence list-group-item list-group-item-action">@childMenu.Name</a>
+                                            </li>
+                                        }
+                                    </ul>
+                                </li>
+                            </ul>
+                        }
+                        else if (menu is MenuModel menuModel)
+                        {
+                            <a asp-action="@menuModel.Action" asp-controller="@menuModel.Controller" class="sequence list-group-item list-group-item-action">@menuModel.Name</a>
+                        }
+                    }
+                </div>
+            </div>
+            <div id="content" class="col-sm-12 col-md-9 col-lg-10 col-xl-10 p-0">
+                <div id="content-header" class="w-100 text-white p-2 bg-info shadow">Test</div>
+
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+        @{
+            var controllerName = ViewContext.RouteData.Values["controller"].ToString();
+
+            int order = 0;
+            string menuName = string.Empty;
+
+            foreach (var menu in menuOrders)
+            {
+                bool haveInMenu = menu.HaveInMenu(controllerName, out order, out menuName);
+
+                if (haveInMenu)
+                    break;
+            }
+        }
+
+                $('.sequence').eq(@order).addClass('active text-white');
+            $('#content-header').text('@menuName');
+
+            $('#btn-toggler').click(function () {
+                $('#sidebar').eq(0).slideToggle();
+            });
+        });
+
+        var toggler = document.getElementsByClassName("caret");
+        var i;
+
+        for (i = 0; i < toggler.length; i++) {
+            toggler[i].addEventListener("click", function () {
+                this.parentElement.querySelector(".nested").classList.toggle("active");
+                this.classList.toggle("caret-down");
+            });
+        }
+    </script>
+
+    @RenderSection("ScriptArea", false)
+</body>
+</html>

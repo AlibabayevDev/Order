@@ -1,9 +1,9 @@
-﻿using PaymentOrder.WebCore.Models;
+﻿using Order.WebCore.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace PaymentOrder.WebCore.Services.Contracts
+namespace Order.WebCore.Services.Contracts
 {
    public interface IService<TModel> where TModel : BaseModel
     {
