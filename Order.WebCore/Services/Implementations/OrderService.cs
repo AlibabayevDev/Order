@@ -51,9 +51,9 @@ namespace Order.WebCore.Services.Implementations
             if(order == null)
                 return null;
             
-            var bankModel = orderMapper.Map(order);   
+            var orderModel = orderMapper.Map(order);   
 
-            return bankModel;
+            return orderModel;
         }
 
         public List<OrderModel> GetAll()

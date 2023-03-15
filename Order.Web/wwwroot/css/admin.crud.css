@@ -1,0 +1,72 @@
+.modal-content .tbl{
+	width: 100%;
+}
+
+.tbl th, td {
+  padding: 10px;
+  text-align: left;
+}
+
+.bgupdate{
+	background-color: #0080FF !important;
+	border-radius: 5px;
+	color:white;
+	padding: 6px 10px; /* Add some padding */
+  	cursor: pointer; /* Add a pointer cursor on mouse-over */
+}
+
+.bgupdate:hover{
+	opacity: 0.7;
+}
+
+.bgdelete{
+	background-color: #F51B00 !important;
+	border-radius: 5px;
+	color:white;
+	padding: 6px 10px; /* Add some padding */
+  	cursor: pointer; /* Add a pointer cursor on mouse-over */
+}
+
+.bgdelete:hover{
+	opacity: 0.7;
+}
+
+.bgprice{
+	background-color: #C7EA46 !important;
+	border-color:#C7EA46 !important; 
+	border-radius: 5px;
+	color:white;
+	padding: 6px 10px; /* Add some padding */
+  	cursor: pointer; /* Add a pointer cursor on mouse-over */
+}
+
+.bgprice:hover{
+	opacity: 0.7;
+}
+
+.tbl tr:nth-child(odd) .bg li{
+  background-color: #f2f2f2 !important;
+}
+
+span.closeItem {
+  float: right;
+  color: grey;
+}
+
+span.selServ{
+	color:#0080FF;
+}
+
+.form-inline #vhtype{
+	width: 45%;
+}
+
+.form-inline #price{
+	width: 20%;
+}
+
+.dataContainer {
+	margin-right: 5%;
+	margin-left: 3%;
+	overflow-x: auto;
+}

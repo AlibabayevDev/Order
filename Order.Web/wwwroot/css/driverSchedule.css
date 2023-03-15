@@ -1,0 +1,37 @@
+    .scheduleContainer h2{
+      text-align: center;
+      border-bottom: 1px solid #e2e2e2;
+    }
+    .scheduleContainer .nav-tabs .nav-item .nav-link.active{
+      color: #0267ff;
+      border-top: 0;
+      border-right: 0;
+      border-left: 0;
+      border-bottom: 4px solid  #0267ff;
+    }
+
+    .scheduleContainer .nav-tabs .nav-link:hover{
+      border:none;
+      color: #0267ff;
+    }
+
+    .scheduleContainer .nav-item .nav-link{
+      color: #626568;
+    }
+
+    .scheduleContainer .tab-content select{
+      color: #626568;
+    }
+
+    .scheduleContainer .tab-content .row{
+      border-bottom: 1px solid #e2e2e2;
+    }
+
+    .scheduleContainer .table td{
+      border-top:none !important;
+      padding-left: 0px !important;
+    }
+
+    .scheduleContainer .table tr{
+      border-bottom: 1px solid #e2e2e2 !important;
+    }

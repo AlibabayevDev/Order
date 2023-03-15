@@ -20,28 +20,30 @@
         <div class="divAnim">@ViewBag.Message</div>
     }
 
-    <table id="banksTable" class="table table-striped table-bordered tbl" style="width:100%">
+    <table id="ordersTable" class="table table-striped table-bordered tbl" style="width:100%">
         <thead>
             <tr>
                 <th>No</th>
-                <th>Number</th>
-                <th>Date</th>
-                <th>ProviderId</th>
+                <th>Name</th>
+                <th>VOEN</th>
+                <th>Correspondent Account</th>
+                <th>SWIFT</th>
                 <th></th>
                 <th></th>
             </tr>
         </thead>
 
         <tbody>
-            @foreach (var bank in Model.Orders)
+            @foreach(var order in Model.Orders)
             {
                 <tr>
-                    <td>@bank.No</td>
-                    <td>@bank.Number</td>
-                    <td>@bank.Date</td>
-                    <td>@bank.ProviderId</td>
-                    <td><button class="btn btn-primary bgupdate" onclick="ShowSaveModal(this)" data-id="@bank.Id" id="btnUpdate"><i class='fas fa-download'></i> Update</button></td>
-                    <td><button class="btn btn-danger bgdelete" onclick="ShowDeleteModal(this)" data-toggle="modal" data-id="@bank.Id" data-target="#DelModal" id="btnDel"><i class='fas fa-trash-alt'></i> Delete</button></td>
+                    <td>@order.Number</td>
+                    <td>@order.Date</td>
+                    <td>@order.ProviderId</td>
+                    <td>bank.CorrespondentAccount</td>
+                    <td><a href="/Bank/Test">push</a></td>
+                    <td><button class="btn btn-primary bgupdate" onclick="ShowSaveModal(this)" data-id="@order.Id" id="btnUpdate"><i class='fas fa-download'></i> Редактировать</button></td>
+                    <td><button class="btn btn-danger bgdelete" onclick="ShowDeleteModal(this)" data-toggle="modal" data-id="@order.Id" data-target="#DelModal" id="btnDel"><i class='fas fa-trash-alt'></i> Удалить</button></td>
                 </tr>
             }
         </tbody>
@@ -50,7 +52,8 @@
                 <th>No</th>
                 <th>Name</th>
                 <th>VOEN</th>
-                <th>ProviderId</th>
+                <th>Correspondent Account</th>
+                <th>SWIFT</th>
                 <th></th>
                 <th></th>
             </tr>
@@ -79,7 +82,7 @@
             </div>
 
             <div class="modal-footer">
-                <form asp-action="Delete" asp-controller="Bank" method="post">
+                <form asp-action="Delete" asp-controller="Order" method="post">
                     <input asp-for="Deleted.Id" class="deletedId" hidden />
                     <button type="submit" class="btn btn-primary bgupdate">Yes</button>
                     <button type="button" class="btn btn-danger bgdelete" data-dismiss="modal">No</button>
@@ -103,7 +106,7 @@
         var dataId = $(elem).data("id");
 
         $.ajax({
-            url: "/Bank/Save?id=" + dataId,
+            url: "/Order/Save?id=" + dataId,
             success: function (data) {
                 $('#createModal').html(data);
                 $("#createModal").modal("show");
@@ -116,12 +119,12 @@
 
     $(document).ready(function () {
 
-        $('#banksTable tfoot th').each(function () {
+        $('#ordersTable tfoot th').each(function () {
             var title = $(this).text();
             $(this).html('<input type="text" placeholder="Search" style="width:100%;" />');
         });
 
-        var table = $('#banksTable').DataTable();
+            var table = $('#ordersTable').DataTable();
 
         table.columns().every(function () {
             var that = this;

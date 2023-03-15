@@ -1,4 +1,5 @@
 ﻿using Order.Core.Domain.Entities;
+using Order.WebCore.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

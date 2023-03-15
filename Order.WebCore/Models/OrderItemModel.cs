@@ -11,6 +11,6 @@ namespace Order.WebCore.Models
         public string Name { get; set; }
         public int Quantity { get; set; }
         public string Unit { get; set; }
-        public int OrderId { get; set; }
+        public OrderModel Order { get; set; }
     }
 }

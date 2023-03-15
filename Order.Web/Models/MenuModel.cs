@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace WasherWeb.Areas.Owners.Models
+namespace Order.Web.Models
 {
     public static class MenuModelExtensions
     {

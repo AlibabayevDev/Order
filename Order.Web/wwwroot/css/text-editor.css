@@ -1,0 +1,10 @@
+﻿.editor p, .editor ol, .editor ul, .editor pre, .editor blockquote, .editor h1, .editor h2, .editor h3, .editor h4, .editor h5, .editor h6 {
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    counter-reset: list-1 list-2 list-3 list-4 list-5 list-6 list-7 list-8 list-9;
+
+    text-align:left;
+
+}

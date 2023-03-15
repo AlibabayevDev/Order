@@ -1,4 +1,4 @@
-﻿@using WasherWeb.Areas.Owners.Models;
+﻿@using Order.Web.Models;
 
 @{
     Layout = null;
@@ -47,8 +47,7 @@
                 <div class="list-group list-group-flush">
                     @{
                         int count = 0;
-                        menuOrders.Add(new MenuModel(count++, "Banks", "Index", "Bank"));
-                        menuOrders.Add(new MenuModel(count++, "Bank Branches", "Index", "BankBranch"));
+                        menuOrders.Add(new MenuModel(count++, "Banks", "Index", "Order"));
                     }
 
                     @foreach (var menu in menuOrders)

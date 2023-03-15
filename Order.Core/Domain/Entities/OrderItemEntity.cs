@@ -11,6 +11,6 @@ namespace Order.Core.Domain.Entities
         public string Name { get; set; }
         public int Quantity { get; set; }
         public string Unit { get; set; }
-        public int OrderId { get; set; }
+        public OrderEntity Order { get; set; }
     }
 }

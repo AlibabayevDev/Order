@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Order.WebCore.Services.Implementations
 {
-    public class UnitOfWorkService : IUnifOfWorkService
+    public class UnitOfWorkService : IUnitOfWorkService
     {
         private readonly IUnitOfWork db;
         public UnitOfWorkService(IUnitOfWork db)
@@ -16,10 +16,10 @@ namespace Order.WebCore.Services.Implementations
             this.db = db;
         }
 
-        public IOrderItemService orderItemService => new OrderItemService(db);
+        public IOrderItemService OrderItemService => new OrderItemService(db);
 
-        public IOrderService orderService => new OrderService(db);
+        public IOrderService OrderService => new OrderService(db);
 
-        public IProviderService providerService => new ProviderService(db);
+        public IProviderService ProviderService => new ProviderService(db);
     }
 }

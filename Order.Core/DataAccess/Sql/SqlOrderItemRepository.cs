@@ -6,112 +6,116 @@ namespace Order.Core.DataAccess.Sql
 {
     public class SqlOrderItemRepository : IOrderItemRepository
     {
-        private readonly string _connect;
+        private readonly string connectionString;
 
         public SqlOrderItemRepository(string connect)
         {
-            _connect = connect;
+            connectionString = connect;
         }
 
-        public void Add(OrderItemEntity bankBranch)
+        public void Add(OrderItemEntity orderItem)
         {
-            using (var connection = new SqlConnection(_connect))
+            using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                string query = "Insert into BankBranchs output inserted.id values(@BankId,@Name,@Phone,@Fax,@Address,@CreatorId,@ModifiedDate,@IsDeleted)";
-
+                string query = "Insert into OrderItem output inserted.id values(@Name,@Quantity,@Unit,@OrderId)";
                 var command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("Id", orderItem.Id);
+                command.Parameters.AddWithValue("Name", orderItem.Name);
+                command.Parameters.AddWithValue("Quantity", orderItem.Quantity);
+                command.Parameters.AddWithValue("Unit", orderItem.Unit);
+                command.Parameters.AddWithValue("OrderId", orderItem.Order.Id);
 
-                command.Parameters.AddWithValue("bankid", bankBranch.Bank.Id);
-                command.Parameters.AddWithValue("name", bankBranch.Name);
-                command.Parameters.AddWithValue("phone", bankBranch.Phone);
-                command.Parameters.AddWithValue("fax", bankBranch.Fax);
-                command.Parameters.AddWithValue("address", bankBranch.Address);
-                command.Parameters.AddWithValue("creatorid", bankBranch.CreatorId);
-                command.Parameters.AddWithValue("ModifiedDate", bankBranch.ModifiedDate);
-                command.Parameters.AddWithValue("isdeleted", bankBranch.IsDeleted);
-
-                bankBranch.Id = Convert.ToInt32(command.ExecuteScalar());
+                orderItem.Id = Convert.ToInt32(command.ExecuteScalar());
             }
         }
 
-        public void Update(OrderItemEntity bankBranch)
+        public void Update(OrderItemEntity orderItem)
         {
-            using (var connection = new SqlConnection(_connect))
+            using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-
-                string query = "update BankBranchs set BankId=@bankid,Name=@name,Phone=@phone,Fax=@fax,Address=@address,CreatorId=@creatorid,ModifiedDate=@ModifiedDate,IsDeleted=@isdeleted where Id=@id";
-
+                string query = "update Order set Name=@Name,Quantity=@Quantity,Unit=@Unit,OrderId=@OrderId where Id=@id";
                 var command = new SqlCommand(query, connection);
-
-                command.Parameters.AddWithValue("id", bankBranch.Id);
-                command.Parameters.AddWithValue("bankid", bankBranch.Bank.Id);
-                command.Parameters.AddWithValue("name", bankBranch.Name);
-                command.Parameters.AddWithValue("phone", bankBranch.Phone);
-                command.Parameters.AddWithValue("fax", bankBranch.Fax);
-                command.Parameters.AddWithValue("address", bankBranch.Address);
-                command.Parameters.AddWithValue("creatorid", bankBranch.CreatorId);
-                command.Parameters.AddWithValue("ModifiedDate", bankBranch.ModifiedDate);
-                command.Parameters.AddWithValue("isdeleted", bankBranch.IsDeleted);
-
+                command.Parameters.AddWithValue("Id", orderItem.Id);
+                command.Parameters.AddWithValue("Name", orderItem.Name);
+                command.Parameters.AddWithValue("Quantity", orderItem.Quantity);
+                command.Parameters.AddWithValue("OrderId", orderItem.Order.Id);
+                command.Parameters.AddWithValue("Unit", orderItem.Unit);
                 command.ExecuteNonQuery();
             }
         }
 
         public List<OrderItemEntity> GetAll()
         {
-            using (var connection = new SqlConnection(_connect))
+            using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-
-                string query = "select BankBranchs.Id,BankBranchs.BankId,Banks.Name as BankName,BankBranchs.Name,BankBranchs.Phone,BankBranchs.Fax,BankBranchs.Address,BankBranchs.CreatorId,BankBranchs.ModifiedDate,BankBranchs.IsDeleted from BankBranchs inner join Banks on BankBranchs.BankId=Banks.Id where BankBranchs.IsDeleted = 0";
-                var command = new SqlCommand(query, connection);
-                var reader = command.ExecuteReader();
-                var list = new List<OrderItemEntity>();
-
-                while (reader.Read())
+                string query = "select OrderItem.Id,orderItem.Name,orderItem.OrderId,orderItem.Quantity,orderItem.Unit,Orders.Id,Orders.number,Orders.ProviderId,Orders.Date from OrderItem inner join Orders on OrderItem.OrderId = Orders.Id";
+                using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    var bankBranch = new OrderItemEntity();
-                    list.Add(bankBranch);
-                }
+                    SqlDataReader reader = command.ExecuteReader();
+                    List<OrderItemEntity> orderItems = new List<OrderItemEntity>();
+                    while (reader.Read())
+                    {
+                        OrderItemEntity entity = new OrderItemEntity();
+                        entity.Id = Convert.ToInt32(reader["Id"]);
+                        entity.Name = Convert.ToString(reader["Name"]);
+                        entity.Quantity = Convert.ToInt32(reader["Quantity"]);
+                        entity.Unit = Convert.ToString(reader["Unit"]);
+                        entity.Order = new OrderEntity()
+                        {
+                            Id = Convert.ToInt32(reader["Id"]),
+                            Date = Convert.ToDateTime(reader["Date"]),
+                            Number = Convert.ToString(reader["Number"]),
+                            ProviderId = Convert.ToInt32(reader["ProviderId"])
+                        };
 
-                return list;
+                        orderItems.Add(entity);
+                    }
+
+                    return orderItems;
+                }
             }
         }
 
         public OrderItemEntity Get(int id)
         {
-            using (var connection = new SqlConnection(_connect))
+            using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-
-                string query = "select BankBranchs.Id,BankBranchs.BankId,Banks.Name as BankName,BankBranchs.Name,BankBranchs.Phone,BankBranchs.Fax,BankBranchs.Address,BankBranchs.CreatorId,BankBranchs.ModifiedDate,BankBranchs.IsDeleted from BankBranchs inner join Banks on BankBranchs.BankId=Banks.Id where BankBranchs.Id = @id and BankBranchs.IsDeleted = 0";
-
-                var command = new SqlCommand(query, connection);
-
-                command.Parameters.AddWithValue("Id", id);
-
-                var reader = command.ExecuteReader();
-
-                if (reader.Read())
+                string query = "select OrderItem.Id,orderItem.Name,orderItem.OrderId,orderItem.Quantity,orderItem.Unit,Orders.Id,Orders.number,Orders.ProviderId,Orders.Date from OrderItem inner join Orders on OrderItem.OrderId = Orders.Id   where Id= @id";
+                using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    var bankBranch = new OrderItemEntity();
-                    return bankBranch;
-                }
-                else
-                {
-                    return null;
+                    command.Parameters.AddWithValue("Id", id);
+                    SqlDataReader reader = command.ExecuteReader();
+                    OrderItemEntity entity = new OrderItemEntity();
+                    while (reader.Read())
+                    {
+                        entity.Id = Convert.ToInt32(reader["Id"]);
+                        entity.Name = Convert.ToString(reader["Name"]);
+                        entity.Quantity = Convert.ToInt32(reader["Quantity"]);
+                        entity.Unit = Convert.ToString(reader["Unit"]);
+                        entity.Order = new OrderEntity()
+                        {
+                            Id = Convert.ToInt32(reader["Id"]),
+                            Date = Convert.ToDateTime(reader["Date"]),
+                            Number = Convert.ToString(reader["Number"]),
+                            ProviderId = Convert.ToInt32(reader["ProviderId"])
+                        };
+
+                    }
+                    return entity;
                 }
             }
         }
 
         public void Delete(int id)
         {
-            using (var connection = new SqlConnection(_connect))
+            using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                string query = "delete from BankBranchs where Id=@id";
+                string query = "delete from OrderItem where Id=@id";
                 var command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("Id", id);
                 command.ExecuteNonQuery();

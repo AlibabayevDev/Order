@@ -11,48 +11,48 @@ namespace Order.Core.DataAccess.Sql
 {
     public class SqlOrderRepository:IOrderRepository
     {
-        private readonly string _connect;
+        private readonly string connectionString;
 
         public SqlOrderRepository(string connect)
         {
-            _connect = connect;
+            connectionString = connect;
         }
-        public void Add(OrderEntity bank)
+        public void Add(OrderEntity order)
         {
-            using (var connection=new SqlConnection(_connect))
+            using (var connection=new SqlConnection(connectionString))
             {
                 connection.Open();
-                string query = "Insert into Order output inserted.id values(@Number,@Date,@ProviderId)";
+                string query = "Insert into Orders output inserted.id values(@Number,@Date,@ProviderId)";
                 var command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("Id", bank.Id);
-                command.Parameters.AddWithValue("Number", bank.Number);
-                command.Parameters.AddWithValue("Date", bank.Date);
-                command.Parameters.AddWithValue("ProviderId", bank.ProviderId);
-                bank.Id = Convert.ToInt32(command.ExecuteScalar());
+                command.Parameters.AddWithValue("Id", order.Id);
+                command.Parameters.AddWithValue("Number", order.Number);
+                command.Parameters.AddWithValue("Date", order.Date);
+                command.Parameters.AddWithValue("ProviderId", order.ProviderId);
+                order.Id = Convert.ToInt32(command.ExecuteScalar());
             }
         }
 
-        public void Update(OrderEntity bank)
+        public void Update(OrderEntity order)
         {
-            using (var connection = new SqlConnection(_connect))
+            using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                string query = "update Order set Number=@Number,Date=@Date,ProviderId=@ProviderId where Id=@id";
+                string query = "update Orders set Number=@Number,Date=@Date,ProviderId=@ProviderId where Id=@id";
                 var command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("Id", bank.Id);
-                command.Parameters.AddWithValue("Number", bank.Number);
-                command.Parameters.AddWithValue("Date", bank.Date);
-                command.Parameters.AddWithValue("ProviderId", bank.ProviderId);
+                command.Parameters.AddWithValue("Id", order.Id);
+                command.Parameters.AddWithValue("Number", order.Number);
+                command.Parameters.AddWithValue("Date", order.Date);
+                command.Parameters.AddWithValue("ProviderId", order.ProviderId);
                 command.ExecuteNonQuery();
             }
         }
 
         public List<OrderEntity> GetAll()
         {
-            using (var connection = new SqlConnection(_connect))
+            using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                string query = "select * from Order";
+                string query = "select * from Orders";
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     SqlDataReader reader = command.ExecuteReader();
@@ -74,10 +74,10 @@ namespace Order.Core.DataAccess.Sql
 
         public OrderEntity Get(int id)
         {
-            using (var connection = new SqlConnection(_connect))
+            using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                string query = "select * from Order where Id= @id";
+                string query = "select * from Orders where Id= @id";
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("Id", id);
@@ -98,10 +98,10 @@ namespace Order.Core.DataAccess.Sql
 
         public void Delete(int id)
         {
-            using (var connection = new SqlConnection(_connect))
+            using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                string query = "delete from Order where Id=@id";
+                string query = "delete from Orders where Id=@id";
                 var command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("Id", id);
                 command.ExecuteNonQuery();

@@ -1,17 +1,15 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Order.WebCore.Models;
 using Order.WebCore.Services.Contracts;
-using System;
-using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace Order.Web.Controllers
 {
-    public class OrderController : Controller
+    public class OrderItemController : Controller
     {
         private readonly IUnitOfWorkService service;
-        public OrderController(IUnitOfWorkService service)
+        public OrderItemController(IUnitOfWorkService service)
         {
             this.service = service;
         }
@@ -19,11 +17,11 @@ namespace Order.Web.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            var orderModels = service.OrderService.GetAll();
+            var orderItemModels = service.OrderService.GetAll();
 
-            OrderViewModel viewModel = new OrderViewModel()
+            OrderItemViewModel viewModel = new OrderItemViewModel()
             {
-                Orders = orderModels
+                Orders = orderItemModels
             };
 
             if (TempData["Message"] != null)
