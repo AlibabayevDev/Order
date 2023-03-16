@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Order.Web.Order.Pages
+namespace Order.Web.OrderItem.Pages
 {
     public class IndexModel : PageModel
     {

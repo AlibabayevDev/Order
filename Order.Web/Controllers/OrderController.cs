@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Order.Web.Models;
+using Order.WebCore.Mappers;
 using Order.WebCore.Models;
 using Order.WebCore.Services.Contracts;
 using System;
@@ -37,13 +40,21 @@ namespace Order.Web.Controllers
         [HttpGet]
         public IActionResult Save(int id)
         {
-            if (id == 0)
-                return PartialView();
+            SaveOrderViewModel viewModel = new SaveOrderViewModel();
 
-            var orderModel = service.OrderService.Get(id);
+            var orderItems = service.OrderItemService.GetAll();
 
-            return PartialView(orderModel);
+            viewModel.OrderList = new SelectList(orderItems, "Id", "Name");
+
+            if (id != 0)
+            {
+                var orderItem = service.OrderService.Get(id);
+                viewModel.Order = orderItem;
+            }
+
+            return PartialView(viewModel);
         }
+
 
         [HttpPost]
         public IActionResult Save(OrderModel model)

@@ -47,7 +47,8 @@
                 <div class="list-group list-group-flush">
                     @{
                         int count = 0;
-                        menuOrders.Add(new MenuModel(count++, "Banks", "Index", "Order"));
+                        menuOrders.Add(new MenuModel(count++, "OrderItem", "Index", "OrderItem"));
+                        menuOrders.Add(new MenuModel(count++, "Order", "Index", "Order"));
                     }
 
                     @foreach (var menu in menuOrders)

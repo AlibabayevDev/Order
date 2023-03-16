@@ -43,7 +43,7 @@ namespace Order.WebCore.Services.Implementations
         {
             var orderItem = db.OrderItemRepository.Get(id);
 
-            db.OrderItemRepository.Update(orderItem);
+            db.OrderItemRepository.Delete(orderItem.Id);
         }
 
         public OrderItemModel Get(int id)

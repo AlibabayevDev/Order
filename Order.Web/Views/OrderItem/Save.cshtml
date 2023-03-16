@@ -1,0 +1,43 @@
+﻿@using Order.Web.Models
+@model SaveOrderItemViewModel
+
+<div class="modal-dialog modal-dialog-scrollable modal-lg">
+    <!-- Modal content -->
+    <div class="modal-content" id="editDebtModelBody">
+        <div style="overflow:auto;" class="modal-body">
+            <form asp-controller="Order" asp-action="Save" class="form-group">
+                <input hidden asp-for="OrderItem.Id" />
+                <div class="form-group">
+                    <label for="name" class="mr-sm-2">Client:</label>
+                    <select asp-for="OrderItem.Id" asp-items="Model.OrderItemList" class="form-control mb-2 mr-sm-2">
+                    </select>
+                    <span asp-validation-for="OrderItem.Order" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="name" class="mr-sm-2">Name:</label>
+                    <input asp-for="OrderItem.Name" class="form-control mb-2 mr-sm-2" />
+                    <span asp-validation-for="OrderItem.Name" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="name" class="mr-sm-2">VOEN:</label>
+                    <input asp-for="OrderItem.Quantity" class="form-control mb-2 mr-sm-2" />
+                    <span asp-validation-for="OrderItem.Quantity" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="name" class="mr-sm-2">Corrsespondent Account:</label>
+                    <input asp-for="OrderItem.Unit" class="form-control mb-2 mr-sm-2" />
+                    <span asp-validation-for="OrderItem.Unit" class="text-danger"></span>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary bgupdate">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<partial name="_ValidationScriptsPartial" />

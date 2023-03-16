@@ -1,29 +1,29 @@
-﻿@using Order.WebCore.Models
-@model OrderModel
+﻿@using Order.Web.Models
+@model SaveOrderViewModel
 
 <div class="modal-dialog modal-dialog-scrollable modal-lg">
     <!-- Modal content -->
     <div class="modal-content" id="editDebtModelBody">
         <div style="overflow:auto;" class="modal-body">
             <form asp-controller="Order" asp-action="Save" class="form-group">
-                <input hidden asp-for="Id"/>
+                <input hidden asp-for="Order.Id"/>
 
                <div class="form-group">
                     <label for="name" class="mr-sm-2">Name:</label>
-                    <input asp-for="Number" class="form-control mb-2 mr-sm-2" />
-                    <span asp-validation-for="Number" class="text-danger"></span>
+                    <input asp-for="Order.Number" class="form-control mb-2 mr-sm-2" />
+                    <span asp-validation-for="Order.Number" class="text-danger"></span>
                 </div>
 
                 <div class="form-group">
                     <label for="name" class="mr-sm-2">VOEN:</label>
-                    <input asp-for="Date" class="form-control mb-2 mr-sm-2" />
-                    <span asp-validation-for="Date" class="text-danger"></span>
+                    <input asp-for="Order.Date" class="form-control mb-2 mr-sm-2" />
+                    <span asp-validation-for="Order.Date" class="text-danger"></span>
                 </div>
                 
                 <div class="form-group">
                     <label for="name" class="mr-sm-2">Corrsespondent Account:</label>
-                    <input asp-for="ProviderId" class="form-control mb-2 mr-sm-2" />
-                    <span asp-validation-for="ProviderId" class="text-danger"></span>
+                    <input asp-for="Order.ProviderId" class="form-control mb-2 mr-sm-2" />
+                    <span asp-validation-for="Order.ProviderId" class="text-danger"></span>
                 </div>
 
                 <div class="modal-footer">

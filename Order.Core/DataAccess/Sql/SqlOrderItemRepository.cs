@@ -51,7 +51,7 @@ namespace Order.Core.DataAccess.Sql
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                string query = "select OrderItem.Id,orderItem.Name,orderItem.OrderId,orderItem.Quantity,orderItem.Unit,Orders.Id,Orders.number,Orders.ProviderId,Orders.Date from OrderItem inner join Orders on OrderItem.OrderId = Orders.Id";
+                string query = "select OrderItem.Id,orderItem.Name,orderItem.OrderId,orderItem.Quantity,orderItem.Unit,Orders.Id as OrderId,Orders.number,Orders.ProviderId,Orders.Date from OrderItem inner join Orders on OrderItem.OrderId = Orders.Id";
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     SqlDataReader reader = command.ExecuteReader();
@@ -65,7 +65,7 @@ namespace Order.Core.DataAccess.Sql
                         entity.Unit = Convert.ToString(reader["Unit"]);
                         entity.Order = new OrderEntity()
                         {
-                            Id = Convert.ToInt32(reader["Id"]),
+                            Id = Convert.ToInt32(reader["OrderId"]),
                             Date = Convert.ToDateTime(reader["Date"]),
                             Number = Convert.ToString(reader["Number"]),
                             ProviderId = Convert.ToInt32(reader["ProviderId"])
@@ -84,7 +84,7 @@ namespace Order.Core.DataAccess.Sql
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                string query = "select OrderItem.Id,orderItem.Name,orderItem.OrderId,orderItem.Quantity,orderItem.Unit,Orders.Id,Orders.number,Orders.ProviderId,Orders.Date from OrderItem inner join Orders on OrderItem.OrderId = Orders.Id   where Id= @id";
+                string query = "select OrderItem.Id,orderItem.Name,orderItem.OrderId,orderItem.Quantity,orderItem.Unit,Orders.Id,Orders.number,Orders.ProviderId,Orders.Date from OrderItem inner join Orders on OrderItem.OrderId = Orders.Id where OrderItem.Id= @Id";
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("Id", id);

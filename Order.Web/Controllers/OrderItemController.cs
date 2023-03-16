@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Order.WebCore.Models;
 using Order.WebCore.Services.Contracts;
 using System.Linq;
 using System;
+using Order.Web.Models;
+using Order.WebCore.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Order.WebCore.Mappers;
 
 namespace Order.Web.Controllers
 {
@@ -17,11 +20,11 @@ namespace Order.Web.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            var orderItemModels = service.OrderService.GetAll();
+            var orderItemModels = service.OrderItemService.GetAll();
 
             OrderItemViewModel viewModel = new OrderItemViewModel()
             {
-                Orders = orderItemModels
+                OrderItems = orderItemModels
             };
 
             if (TempData["Message"] != null)
@@ -35,16 +38,24 @@ namespace Order.Web.Controllers
         [HttpGet]
         public IActionResult Save(int id)
         {
-            if (id == 0)
-                return PartialView();
+            SaveOrderItemViewModel viewModel = new SaveOrderItemViewModel();
 
-            var orderModel = service.OrderService.Get(id);
+            var orderItems = service.OrderItemService.GetAll();
 
-            return PartialView(orderModel);
+            viewModel.OrderItemList = new SelectList(orderItems, "Id", "Name");
+
+            if (id != 0)
+            {
+                var orderItemMapper = new OrderItemMapper();
+                var orderItem = service.OrderItemService.Get(id);
+                viewModel.OrderItem = orderItem;
+            }
+
+            return PartialView(viewModel);
         }
 
         [HttpPost]
-        public IActionResult Save(OrderModel model)
+        public IActionResult Save(OrderItemModel model)
         {
             try
             {
@@ -63,7 +74,7 @@ namespace Order.Web.Controllers
                     return RedirectToAction("Index");
                 }
 
-                service.OrderService.Save(model);
+                service.OrderItemService.Save(model);
 
                 TempData["Message"] = "Operation successfully";
             }
@@ -77,11 +88,11 @@ namespace Order.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Delete(OrderViewModel viewModel)
+        public IActionResult Delete(OrderItemViewModel viewModel)
         {
             var deletedId = viewModel.Deleted.Id;
 
-            service.OrderService.Delete(deletedId);
+            service.OrderItemService.Delete(deletedId);
 
             TempData["Message"] = "Operation successfully";
 
