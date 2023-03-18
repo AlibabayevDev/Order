@@ -20,14 +20,23 @@
         <div class="divAnim">@ViewBag.Message</div>
     }
 
-    
+    <form asp-action="SortDate" asp-controller="Order" method="get">
+        <select asp-for="SortDate">
+            <option value="1">Заказы на сегодня</option>
+            <option value="2">Заказы на месяц</option>
+        </select>
+
+        <input type="submit" value="Фильтр"/>
+    </form>
+
     <table id="ordersTable" class="table table-striped table-bordered tbl" style="width:100%">
         <thead>
             <tr>
                 <th>Number</th>
                 <th>Date</th>
                 <th>Provider Name</th>
-                <th>SWIFT</th>
+                <th></th>
+                <th></th>
                 <th></th>
             </tr>
         </thead>
@@ -39,6 +48,7 @@
                     <td>@order.Number</td>
                     <td>@order.Date</td>
                     <td>@order.ProviderId</td>
+                    <td><button class="btn btn-primary bgupdate" onclick="ShowSaveModal(this)" data-id="@order.Id" id="btnUpdate"><i class='fas fa-download'></i> Подробке о заказе</button></td>
                     <td><button class="btn btn-primary bgupdate" onclick="ShowSaveModal(this)" data-id="@order.Id" id="btnUpdate"><i class='fas fa-download'></i> Редактировать</button></td>
                     <td><button class="btn btn-danger bgdelete" onclick="ShowDeleteModal(this)" data-toggle="modal" data-id="@order.Id" data-target="#DelModal" id="btnDel"><i class='fas fa-trash-alt'></i> Удалить</button></td>
                 </tr>
@@ -47,9 +57,10 @@
         <tfoot>
             <tr>
                 <th>Number</th>
-                <th>Name</th>
                 <th>Date</th>
                 <th>Provider Name</th>
+                <th></th>
+                <th></th>
                 <th></th>
             </tr>
         </tfoot>
@@ -60,8 +71,6 @@
 
 <div class="modal fade" id="createModal">
 </div>
-
-
 <!-- The Modal -->
 <div class="modal fade" id="DelModal">
     <div class="modal-dialog">
@@ -87,11 +96,9 @@
     </div>
 </div>
 
-
 @section ScriptArea
 {
 <script>
-
     function ShowDeleteModal(elem) {
         var dataId = $(elem).data("id");
         $(".deletedId").val(dataId);

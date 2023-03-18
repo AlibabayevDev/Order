@@ -9,20 +9,20 @@
                 <input hidden asp-for="Order.Id"/>
 
                <div class="form-group">
-                    <label for="name" class="mr-sm-2">Name:</label>
+                    <label for="name" class="mr-sm-2">Number:</label>
                     <input asp-for="Order.Number" class="form-control mb-2 mr-sm-2" />
                     <span asp-validation-for="Order.Number" class="text-danger"></span>
                 </div>
 
                 <div class="form-group">
-                    <label for="name" class="mr-sm-2">VOEN:</label>
+                    <label for="name" class="mr-sm-2">Date:</label>
                     <input asp-for="Order.Date" class="form-control mb-2 mr-sm-2" />
                     <span asp-validation-for="Order.Date" class="text-danger"></span>
                 </div>
                 
                 <div class="form-group">
-                    <label for="name" class="mr-sm-2">Corrsespondent Account:</label>
-                    <input asp-for="Order.ProviderId" class="form-control mb-2 mr-sm-2" />
+                    <label for="name" class="mr-sm-2">Provider Name:</label>
+                    <input asp-for="Order.ProviderId" type="number" class="form-control mb-2 mr-sm-2" />
                     <span asp-validation-for="Order.ProviderId" class="text-danger"></span>
                 </div>
 

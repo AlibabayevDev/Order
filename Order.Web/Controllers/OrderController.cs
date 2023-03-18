@@ -57,26 +57,11 @@ namespace Order.Web.Controllers
 
 
         [HttpPost]
-        public IActionResult Save(OrderModel model)
+        public IActionResult Save(SaveOrderViewModel model)
         {
             try
             {
-                if (ModelState.IsValid == false)
-                {
-                    var errors = ModelState.SelectMany(x => x.Value.Errors).Select(x => x.ErrorMessage).ToList();
-                    var errorMessage = errors.Aggregate((message, value) =>
-                    {
-                        if (message.Length == 0)
-                            return value;
-
-                        return message + ", " + value;
-                    });
-
-                    TempData["Message"] = errorMessage;
-                    return RedirectToAction("Index");
-                }
-
-                service.OrderService.Save(model);
+                service.OrderService.Save(model.Order);
 
                 TempData["Message"] = "Operation successfully";
             }
@@ -100,5 +85,29 @@ namespace Order.Web.Controllers
 
             return RedirectToAction("Index");
         }
+
+
+
+        [HttpGet]
+        public IActionResult SortDate(OrderViewModel model)
+        {
+            var orderModels = service.OrderService.GetAll();
+            IEnumerable<OrderModel> sortModels;
+            if (model.SortDate==1)
+            {
+                 sortModels = orderModels.Where(x => x.Date.Date == DateTime.Today);
+            }
+            else
+            {
+                 sortModels = orderModels.Where(x => (x.Date>= DateTime.Today.AddMonths(-1)));
+            }
+
+            var viewModel = new OrderViewModel()
+            {
+                Orders = sortModels
+            };
+            return View("Index", viewModel);
+        }
+
     }
 }
