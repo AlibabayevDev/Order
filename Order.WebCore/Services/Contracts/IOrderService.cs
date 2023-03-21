@@ -7,5 +7,6 @@ namespace Order.WebCore.Services.Contracts
 {
     public interface IOrderService : IService<OrderModel>
     {
+        bool Check(OrderModel model);
     }
 }

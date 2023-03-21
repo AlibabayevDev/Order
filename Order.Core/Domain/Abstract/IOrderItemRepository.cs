@@ -9,6 +9,6 @@ namespace Order.Core.Domain.Abstract
 {
     public interface IOrderItemRepository : ICrudRepository<OrderItemEntity>
     {
-       
+        List<OrderItemEntity> GetById(int id);
     }
 }

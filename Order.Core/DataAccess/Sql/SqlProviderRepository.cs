@@ -50,13 +50,15 @@ namespace Order.Core.DataAccess.Sql
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                string query = "select * from Provider where IsDeleted=0";
+                string query = "select * from Provider";
                 var command = new SqlCommand(query, connection);
                 var reader = command.ExecuteReader();
                 var list = new List<ProviderEntity>();
                 while (reader.Read())
                 {
                     var provider = new ProviderEntity();
+                    provider.Id = Convert.ToInt32(reader["Id"]);
+                    provider.Name = Convert.ToString(reader["Name"]);
                     list.Add(provider);
                 }
 

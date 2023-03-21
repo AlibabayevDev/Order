@@ -7,9 +7,6 @@
         <div style="overflow:auto;" class="modal-body">
             <form asp-controller="OrderItem" asp-action="Save" class="form-group">
                 <input hidden asp-for="Order.Id" />
-                <input hidden asp-for="OrderItem.Id" />
-                <input hidden asp-for="OrderItem.OrderId" />
-
                 <div class="form-group">
                     <h1>Номер Заказа: @Model.Order.Number</h1>
                 </div>

@@ -18,13 +18,13 @@ namespace Order.Core.DataAccess.Sql
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                string query = "Insert into OrderItem output inserted.id values(@Name,@Quantity,@Unit,@OrderId)";
+                string query = "Insert into OrderItem output inserted.id values(@OrderId,@Name,@Quantity,@Unit)";
                 var command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("Id", orderItem.Id);
                 command.Parameters.AddWithValue("Name", orderItem.Name);
                 command.Parameters.AddWithValue("Quantity", orderItem.Quantity);
                 command.Parameters.AddWithValue("Unit", orderItem.Unit);
-                command.Parameters.AddWithValue("OrderId", orderItem.Order.Id);
+                command.Parameters.AddWithValue("OrderId", orderItem.OrderId);
 
                 orderItem.Id = Convert.ToInt32(command.ExecuteScalar());
             }
@@ -35,12 +35,12 @@ namespace Order.Core.DataAccess.Sql
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                string query = "update Order set Name=@Name,Quantity=@Quantity,Unit=@Unit,OrderId=@OrderId where Id=@id";
+                string query = "update OrderItem set OrderId=@OrderId,Name=@Name,Quantity=@Quantity,Unit=@Unit where Id=@id";
                 var command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("Id", orderItem.Id);
+                command.Parameters.AddWithValue("OrderId", orderItem.OrderId);
                 command.Parameters.AddWithValue("Name", orderItem.Name);
                 command.Parameters.AddWithValue("Quantity", orderItem.Quantity);
-                command.Parameters.AddWithValue("OrderId", orderItem.Order.Id);
                 command.Parameters.AddWithValue("Unit", orderItem.Unit);
                 command.ExecuteNonQuery();
             }
@@ -84,7 +84,7 @@ namespace Order.Core.DataAccess.Sql
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                string query = "select OrderItem.Id,orderItem.Name,orderItem.OrderId,orderItem.Quantity,orderItem.Unit,Orders.Id,Orders.number,Orders.ProviderId,Orders.Date from OrderItem inner join Orders on OrderItem.OrderId = Orders.Id where OrderItem.Id= @Id";
+                string query = "select OrderItem.Id,orderItem.OrderId,orderItem.Name,orderItem.OrderId,orderItem.Quantity,orderItem.Unit,Orders.Id,Orders.number,Orders.ProviderId,Orders.Date from OrderItem inner join Orders on OrderItem.OrderId = Orders.Id where OrderItem.Id= @Id";
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("Id", id);
@@ -93,6 +93,7 @@ namespace Order.Core.DataAccess.Sql
                     while (reader.Read())
                     {
                         entity.Id = Convert.ToInt32(reader["Id"]);
+                        entity.OrderId = Convert.ToInt32(reader["orderId"]);
                         entity.Name = Convert.ToString(reader["Name"]);
                         entity.Quantity = Convert.ToInt32(reader["Quantity"]);
                         entity.Unit = Convert.ToString(reader["Unit"]);
@@ -119,6 +120,41 @@ namespace Order.Core.DataAccess.Sql
                 var command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("Id", id);
                 command.ExecuteNonQuery();
+            }
+        }
+
+        public List<OrderItemEntity> GetById(int id)
+        {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = "select OrderItem.Id,orderItem.Name,orderItem.OrderId,orderItem.Quantity,orderItem.Unit,Orders.Id as OrderId,Orders.number,Orders.ProviderId,Orders.Date from OrderItem inner join Orders on OrderItem.OrderId = Orders.Id where @Id=OrderItem.OrderId";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("Id", id);
+                    SqlDataReader reader = command.ExecuteReader();
+                    List<OrderItemEntity> orderItems = new List<OrderItemEntity>();
+                    while (reader.Read())
+                    {
+                        OrderItemEntity entity = new OrderItemEntity();
+                        entity.Id = Convert.ToInt32(reader["Id"]);
+                        entity.Name = Convert.ToString(reader["Name"]);
+                        entity.Quantity = Convert.ToInt32(reader["Quantity"]);
+                        entity.Unit = Convert.ToString(reader["Unit"]);
+                        entity.OrderId = Convert.ToInt32(reader["OrderId"]);
+                        entity.Order = new OrderEntity()
+                        {
+                            Id = Convert.ToInt32(reader["OrderId"]),
+                            Date = Convert.ToDateTime(reader["Date"]),
+                            Number = Convert.ToString(reader["Number"]),
+                            ProviderId = Convert.ToInt32(reader["ProviderId"])
+                        };
+
+                        orderItems.Add(entity);
+                    }
+
+                    return orderItems;
+                }
             }
         }
     }

@@ -9,5 +9,6 @@ namespace Order.WebCore.Services.Contracts
 {
     public interface IOrderItemService : IService<OrderItemModel>
     {
+        List<OrderItemModel> GetById(int id);
     }
 }

@@ -1,11 +1,13 @@
 ﻿using Order.Core.Domain.Entities;
 using Order.WebCore.Mappers;
 using Order.WebCore.Models;
+using System.Reflection;
 
 namespace Order.WebCore.Mappers
 {
     public class OrderMapper : BaseMapper<OrderEntity, OrderModel>
     {
+        private readonly ProviderMapper providerMapper=new ProviderMapper();
         public override OrderEntity Map(OrderModel model)
         {
             return new OrderEntity()
@@ -14,6 +16,7 @@ namespace Order.WebCore.Mappers
                 Number = model.Number,
                 Date = model.Date,
                 ProviderId = model.ProviderId,  
+                Provider=providerMapper.Map(model.Provider)
             };
         }
 
@@ -25,6 +28,7 @@ namespace Order.WebCore.Mappers
                 Number=entity.Number,
                 Date=entity.Date,
                 ProviderId=entity.ProviderId,
+                Provider = providerMapper.Map(entity.Provider)
             };
         }
     }

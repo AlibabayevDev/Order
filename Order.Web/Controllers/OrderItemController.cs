@@ -6,6 +6,7 @@ using Order.Web.Models;
 using Order.WebCore.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Order.WebCore.Mappers;
+using System.Reflection;
 
 namespace Order.Web.Controllers
 {
@@ -46,35 +47,58 @@ namespace Order.Web.Controllers
 
             if (id != 0)
             {
-                var orderItemMapper = new OrderItemMapper();
                 var orderItem = service.OrderItemService.Get(id);
                 viewModel.OrderItem = orderItem;
+                var order = service.OrderService.Get(orderItem.OrderId);
+
+                viewModel.Order = order;
             }
+            
+
+            return PartialView(viewModel);
+        }
+
+        [HttpGet]
+        public IActionResult Add(int id)
+        {
+            SaveOrderItemViewModel viewModel = new SaveOrderItemViewModel();
+
+            var orderItems = service.OrderService.GetAll();
+
+            viewModel.OrderItemList = new SelectList(orderItems, "Id", "Name");
+            var order = service.OrderService.Get(id);
+            
+            viewModel.Order = new OrderModel()
+            {
+                Id = order.Id,
+                Number=order.Number,
+            };
 
             return PartialView(viewModel);
         }
 
         [HttpPost]
-        public IActionResult Save(OrderItemModel model)
+        public IActionResult Save(SaveOrderItemViewModel model)
         {
+            model.OrderItem.OrderId = model.Order.Id;
             try
             {
-                if (ModelState.IsValid == false)
-                {
-                    var errors = ModelState.SelectMany(x => x.Value.Errors).Select(x => x.ErrorMessage).ToList();
-                    var errorMessage = errors.Aggregate((message, value) =>
-                    {
-                        if (message.Length == 0)
-                            return value;
+                //if (ModelState.IsValid == false)
+                //{
+                //    var errors = ModelState.SelectMany(x => x.Value.Errors).Select(x => x.ErrorMessage).ToList();
+                //    var errorMessage = errors.Aggregate((message, value) =>
+                //    {
+                //        if (message.Length == 0)
+                //            return value;
 
-                        return message + ", " + value;
-                    });
+                //        return message + ", " + value;
+                //    });
 
-                    TempData["Message"] = errorMessage;
-                    return RedirectToAction("Index");
-                }
+                //    TempData["Message"] = errorMessage;
+                //    return RedirectToAction("Index");
+                //}
 
-                service.OrderItemService.Save(model);
+                service.OrderItemService.Save(model.OrderItem);
 
                 TempData["Message"] = "Operation successfully";
             }
@@ -84,7 +108,7 @@ namespace Order.Web.Controllers
                 TempData["Message"] = "Operation unsuccessfully";
             }
 
-            return RedirectToAction("Index");
+            return RedirectToAction("OrderItems", new { orderId = model.Order.Id });
         }
 
         [HttpPost]
@@ -92,11 +116,26 @@ namespace Order.Web.Controllers
         {
             var deletedId = viewModel.Deleted.Id;
 
-            service.OrderItemService.Delete(deletedId);
+            var orderItem=service.OrderItemService.Get(deletedId);
 
+            service.OrderItemService.Delete(deletedId);
             TempData["Message"] = "Operation successfully";
 
-            return RedirectToAction("Index");
+            return RedirectToAction("OrderItems", new { orderId = orderItem.OrderId });
+        }
+
+
+        public IActionResult OrderItems(int orderId)
+        {
+            var orderItems = service.OrderItemService.GetById(orderId);
+            var order=service.OrderService.Get(orderId);
+            var viewModel = new OrderItemViewModel()
+            {
+                OrderItems = orderItems,
+                Order=order
+            };
+
+            return View("Index", viewModel);
         }
     }
 }

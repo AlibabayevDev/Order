@@ -26,7 +26,7 @@ namespace Order.Web.Controllers
 
             OrderViewModel viewModel = new OrderViewModel()
             {
-                Orders = orderModels
+                Orders = orderModels.Where(x => (x.Date >= DateTime.Today.AddMonths(-1))),
             };
 
             if (TempData["Message"] != null)
@@ -38,18 +38,36 @@ namespace Order.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult Save(int id)
+        public IActionResult Add(int id)
         {
             SaveOrderViewModel viewModel = new SaveOrderViewModel();
 
-            var orderItems = service.OrderItemService.GetAll();
+            var providers = service.ProviderService.GetAll();
 
-            viewModel.OrderList = new SelectList(orderItems, "Id", "Name");
+            viewModel.ProviderList = new SelectList(providers, "Id", "Name");
 
             if (id != 0)
             {
-                var orderItem = service.OrderService.Get(id);
-                viewModel.Order = orderItem;
+                var order = service.OrderService.Get(id);
+                viewModel.Order = order;
+            }
+
+            return PartialView(viewModel);
+        }
+
+        [HttpGet]
+        public IActionResult Update(int id)
+        {
+            SaveOrderViewModel viewModel = new SaveOrderViewModel();
+
+            var providers = service.ProviderService.GetAll();
+
+            viewModel.ProviderList = new SelectList(providers, "Id", "Name");
+
+            if (id != 0)
+            {
+                var order = service.OrderService.Get(id);
+                viewModel.Order = order;
             }
 
             return PartialView(viewModel);
@@ -57,22 +75,44 @@ namespace Order.Web.Controllers
 
 
         [HttpPost]
-        public IActionResult Save(SaveOrderViewModel model)
+        public IActionResult Add(SaveOrderViewModel model)
         {
             try
             {
-                service.OrderService.Save(model.Order);
-
-                TempData["Message"] = "Operation successfully";
+                var temp = service.OrderService.Check(model.Order);
+                if(temp==true)
+                {
+                    TempData["Message"] = "Заказ от этого поставщика существует";
+                }
+                else
+                {
+                    service.OrderService.Save(model.Order);
+                    TempData["Message"] = "Операция успешно";
+                }
             }
             catch (Exception exc)
             {
-
-                TempData["Message"] = "Operation unsuccessfully";
+                TempData["Message"] = "Операция неудачна";
             }
 
             return RedirectToAction("Index");
         }
+        public IActionResult Update(SaveOrderViewModel model)
+        {
+            try
+            {
+                service.OrderService.Save(model.Order);
+                TempData["Message"] = "Операция успешно";
+                
+            }
+            catch (Exception exc)
+            {
+                TempData["Message"] = "Операция неудачна";
+            }
+
+            return RedirectToAction("Index");
+        }
+
 
         [HttpPost]
         public IActionResult Delete(OrderViewModel viewModel)
@@ -87,27 +127,36 @@ namespace Order.Web.Controllers
         }
 
 
-
         [HttpGet]
         public IActionResult SortDate(OrderViewModel model)
         {
             var orderModels = service.OrderService.GetAll();
             IEnumerable<OrderModel> sortModels;
-            if (model.SortDate==1)
+            if (model.SortDate1.ToString() == "01.01.0001 0:00:00" && model.SortDate2.ToString() == "01.01.0001 0:00:00")
             {
-                 sortModels = orderModels.Where(x => x.Date.Date == DateTime.Today);
+                sortModels = orderModels.Where(x => (x.Date >= DateTime.Now.AddMonths(-1)));
+            }
+            else if (model.SortDate1.ToString() == "01.01.0001 0:00:00")
+            {
+                sortModels = orderModels.Where(x => (x.Date <= model.SortDate2));
+            }
+            else if (model.SortDate2.ToString() == "01.01.0001 0:00:00")
+            {
+                sortModels = orderModels.Where(x => (x.Date >= model.SortDate1));
             }
             else
             {
-                 sortModels = orderModels.Where(x => (x.Date>= DateTime.Today.AddMonths(-1)));
+                sortModels = orderModels.Where(x => (x.Date >= model.SortDate1 && x.Date <= model.SortDate2));
             }
+
 
             var viewModel = new OrderViewModel()
             {
-                Orders = sortModels
+                Orders = sortModels,
+                SortDate1=model.SortDate1,
+                SortDate2=model.SortDate2,
             };
             return View("Index", viewModel);
         }
-
     }
 }

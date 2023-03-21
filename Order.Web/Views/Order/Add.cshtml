@@ -1,0 +1,29 @@
+﻿@using Order.Web.Models
+@model SaveOrderViewModel
+
+<div class="modal-dialog modal-dialog-scrollable modal-lg">
+    <!-- Modal content -->
+    <div class="modal-content" id="editDebtModelBody">
+        <div style="overflow:auto;" class="modal-body">
+            <form asp-controller="Order" asp-action="Add" class="form-group">
+                <input hidden asp-for="Order.Id" />
+
+                <div class="form-group">
+                    <label for="name" class="mr-sm-2">Номер Заказа:</label>
+                    <input asp-for="Order.Number" class="form-control mb-2 mr-sm-2" required />
+                </div>
+                <div class="form-group">
+                    <label for="name" class="mr-sm-2">Поставщик:</label>
+                    <select asp-for="Order.ProviderId" asp-items="Model.ProviderList" class="form-control mb-2 mr-sm-2" required>
+                    </select>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary bgupdate">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<partial name="_ValidationScriptsPartial" />

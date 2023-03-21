@@ -6,7 +6,8 @@ namespace Order.WebCore.Models
     {
         public IEnumerable<OrderModel> Orders { get; set; }
         public OrderModel Deleted { get; set; }
-        public int SortDate { get; set; }
+        public DateTime SortDate1 { get; set; }
+        public DateTime SortDate2 { get; set; }
 
     }
 }

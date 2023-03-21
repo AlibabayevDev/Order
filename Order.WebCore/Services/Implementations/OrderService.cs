@@ -39,9 +39,7 @@ namespace Order.WebCore.Services.Implementations
 
         public void Delete(int id)
         {
-            var order = db.OrderRepository.Get(id);
-            
-            db.OrderRepository.Update(order);
+            db.OrderRepository.Delete(id);
         }
 
         public OrderModel Get(int id)
@@ -67,11 +65,24 @@ namespace Order.WebCore.Services.Implementations
                 var order = orders[i];
                 var orderModel = orderMapper.Map(order);
 
-                orderModel.No = i + 1;
                 orderModels.Add(orderModel);
             }
 
             return orderModels;
+        }
+
+        public bool Check(OrderModel order)
+        {
+            var entity = db.OrderRepository.CheckOrder(order.ProviderId,order.Number);
+
+            if (entity.Id == 0)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
     }
 }

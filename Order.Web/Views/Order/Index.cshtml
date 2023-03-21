@@ -21,20 +21,21 @@
     }
 
     <form asp-action="SortDate" asp-controller="Order" method="get">
-        <select asp-for="SortDate">
-            <option value="1">Заказы на сегодня</option>
-            <option value="2">Заказы на месяц</option>
-        </select>
+        
+        <input asp-for="SortDate1" type="datetime-local" value="@Model.SortDate1"/>
+        <input asp-for="SortDate2" type="datetime-local" value="@Model.SortDate2" />
 
         <input type="submit" value="Фильтр"/>
     </form>
 
+    <button class="btn btn-primary bgupdate" onclick="ShowAddModal(this)" data-toggle="modal" data-id="0" id="myBtnAdd"><i class='fas fa-download'></i> Добавить заказ</button>
+
     <table id="ordersTable" class="table table-striped table-bordered tbl" style="width:100%">
         <thead>
             <tr>
-                <th>Number</th>
-                <th>Date</th>
-                <th>Provider Name</th>
+                <th>Номер Заказа</th>
+                <th>Дата</th>
+                <th>Поставщик</th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -47,8 +48,8 @@
                 <tr>
                     <td>@order.Number</td>
                     <td>@order.Date</td>
-                    <td>@order.ProviderId</td>
-                    <td><button class="btn btn-primary bgupdate" onclick="ShowSaveModal(this)" data-id="@order.Id" id="btnUpdate"><i class='fas fa-download'></i> Подробке о заказе</button></td>
+                    <td>@order.Provider.Name</td>
+                    <td><a href="@Url.Action("OrderItems","OrderItem", new { orderId= order.Id })" class="btn btn-primary bgupdate"><i class='fas fa-download'></i> Подробно о заказе</a></td>
                     <td><button class="btn btn-primary bgupdate" onclick="ShowSaveModal(this)" data-id="@order.Id" id="btnUpdate"><i class='fas fa-download'></i> Редактировать</button></td>
                     <td><button class="btn btn-danger bgdelete" onclick="ShowDeleteModal(this)" data-toggle="modal" data-id="@order.Id" data-target="#DelModal" id="btnDel"><i class='fas fa-trash-alt'></i> Удалить</button></td>
                 </tr>
@@ -56,9 +57,9 @@
         </tbody>
         <tfoot>
             <tr>
-                <th>Number</th>
-                <th>Date</th>
-                <th>Provider Name</th>
+                <th>Номер Заказа</th>
+                <th>Дата</th>
+                <th>Поставщик</th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -67,7 +68,6 @@
     </table>
 
 </div>
-<button class="btn btn-primary bgupdate" onclick="ShowSaveModal(this)" data-toggle="modal" data-id="0" id="myBtnAdd"><i class='fas fa-download'></i> Добавить заказ</button>
 
 <div class="modal fade" id="createModal">
 </div>
@@ -108,7 +108,7 @@
         var dataId = $(elem).data("id");
 
         $.ajax({
-            url: "/Order/Save?id=" + dataId,
+            url: "/Order/Update?id=" + dataId,
             success: function (data) {
                 $('#createModal').html(data);
                 $("#createModal").modal("show");
@@ -118,7 +118,20 @@
             }
         });
     }
+        function ShowAddModal(elem) {
+            var dataId = $(elem).data("id");
 
+            $.ajax({
+                url: "/Order/Add?id=" + dataId,
+                success: function (data) {
+                    $('#createModal').html(data);
+                    $("#createModal").modal("show");
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
     $(document).ready(function () {
 
         $('#ordersTable tfoot th').each(function () {

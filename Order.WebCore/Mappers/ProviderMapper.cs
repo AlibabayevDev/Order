@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Order.WebCore.Mappers
 {
-    public class ProviderId : BaseMapper<ProviderEntity, ProviderModel>
+    public class ProviderMapper : BaseMapper<ProviderEntity, ProviderModel>
     {
         public override ProviderEntity Map(ProviderModel model)
         {

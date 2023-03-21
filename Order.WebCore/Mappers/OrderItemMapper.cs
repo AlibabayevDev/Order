@@ -20,7 +20,8 @@ namespace Order.WebCore.Mappers
                 Name = model.Name,
                 Quantity = model.Quantity,
                 Unit=model.Unit,
-                Order = orderMapper.Map(model.Order)
+                Order = orderMapper.Map(model.Order),
+                OrderId = model.OrderId,
             };
         }
 
@@ -33,6 +34,7 @@ namespace Order.WebCore.Mappers
                 Order = orderMapper.Map(entity.Order),
                 Unit = entity.Unit,
                 Quantity=entity.Quantity,
+                OrderId=entity.OrderId,
             };
         }
     }

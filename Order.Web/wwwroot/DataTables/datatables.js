@@ -869,7 +869,7 @@ function createCache() {
 	function cache( key, value ) {
 		// Use (key + " ") to avoid collision with native prototype properties (see Issue #157)
 		if ( keys.push( key + " " ) > Expr.cacheLength ) {
-			// Only keep the most recent entries
+			// Only keep the most recent  
 			delete cache[ keys.shift() ];
 		}
 		return (cache[ key + " " ] = value);
@@ -15052,7 +15052,7 @@ return jQuery;
 		/**
 		 * Sort the table by a particular column
 		 *  @param {int} iCol the data index to sort on. Note that this will not match the
-		 *    'display index' if you have hidden data entries
+		 *    'display index' if you have hidden data  
 		 *  @dtopt API
 		 *  @deprecated Since v1.10
 		 *
@@ -24499,7 +24499,7 @@ return jQuery;
 	
 	
 		/**
-		 * This parameter allows you to readily specify the entries in the length drop
+		 * This parameter allows you to readily specify the   in the length drop
 		 * down menu that DataTables shows when pagination is enabled. It can be
 		 * either a 1D array of options which will be used for both the displayed
 		 * option and the value, or a 2D array which will use the array in the first
@@ -24509,7 +24509,7 @@ return jQuery;
 		 * Note that the `pageLength` property will be automatically set to the
 		 * first value given in this array, unless `pageLength` is also provided.
 		 *  @type array
-		 *  @default [ 10, 25, 50, 100 ]
+		 *  @default [ 50 ]
 		 *
 		 *  @dtopt Option
 		 *  @name DataTable.defaults.lengthMenu
@@ -24521,7 +24521,7 @@ return jQuery;
 		 *      } );
 		 *    } );
 		 */
-		"aLengthMenu": [ 10, 25, 50, 100 ],
+		"aLengthMenu": [ 50 ],
 	
 	
 		/**
@@ -24764,7 +24764,7 @@ return jQuery;
 		 * Enable or disable the display of a 'processing' indicator when the table is
 		 * being processed (e.g. a sort). This is particularly useful for tables with
 		 * large amounts of data where it can take a noticeable amount of time to sort
-		 * the entries.
+		 * the  .
 		 *  @type boolean
 		 *  @default false
 		 *
@@ -25050,7 +25050,7 @@ return jQuery;
 	
 		/**
 		 * When rendering large numbers in the information element for the table
-		 * (i.e. "Showing 1 to 10 of 57 entries") DataTables will render large numbers
+		 * (i.e. "Showing 1 to 10 of 57  ") DataTables will render large numbers
 		 * to have a comma separator for the 'thousands' units (e.g. 1 million is
 		 * rendered as "1,000,000") to help readability for the end user. This
 		 * function will override the default method DataTables uses.
@@ -25783,7 +25783,7 @@ return jQuery;
 			 * * `\_PAGES\_` - Total number of pages of data in the table
 			 *
 			 *  @type string
-			 *  @default Showing _START_ to _END_ of _TOTAL_ entries
+			 *  @default Showing _START_ to _END_ of _TOTAL_  
 			 *
 			 *  @dtopt Language
 			 *  @name DataTable.defaults.language.info
@@ -25797,14 +25797,14 @@ return jQuery;
 			 *      } );
 			 *    } );
 			 */
-			"sInfo": "Showing _START_ to _END_ of _TOTAL_ entries",
+			"sInfo": "",
 	
 	
 			/**
 			 * Display information string for when the table is empty. Typically the
 			 * format of this string should match `info`.
 			 *  @type string
-			 *  @default Showing 0 to 0 of 0 entries
+			 *  @default Showing 0 to 0 of 0  
 			 *
 			 *  @dtopt Language
 			 *  @name DataTable.defaults.language.infoEmpty
@@ -25813,12 +25813,12 @@ return jQuery;
 			 *    $(document).ready( function() {
 			 *      $('#example').dataTable( {
 			 *        "language": {
-			 *          "infoEmpty": "No entries to show"
+			 *          "infoEmpty": "No   to show"
 			 *        }
 			 *      } );
 			 *    } );
 			 */
-			"sInfoEmpty": "Showing 0 to 0 of 0 entries",
+			"sInfoEmpty": "",
 	
 	
 			/**
@@ -25826,7 +25826,7 @@ return jQuery;
 			 * to the information (`info`) to give an idea of how strong the filtering
 			 * is. The variable _MAX_ is dynamically updated.
 			 *  @type string
-			 *  @default (filtered from _MAX_ total entries)
+			 *  @default (filtered from _MAX_ total )
 			 *
 			 *  @dtopt Language
 			 *  @name DataTable.defaults.language.infoFiltered
@@ -25840,7 +25840,7 @@ return jQuery;
 			 *      } );
 			 *    } );
 			 */
-			"sInfoFiltered": "(filtered from _MAX_ total entries)",
+			"sInfoFiltered": "(filtered from _MAX_ total )",
 	
 	
 			/**
@@ -25926,7 +25926,7 @@ return jQuery;
 			 * with a default select list of 10, 25, 50 and 100, and can be replaced
 			 * with a custom select box if required.
 			 *  @type string
-			 *  @default Show _MENU_ entries
+			 *  @default Show _MENU_ 
 			 *
 			 *  @dtopt Language
 			 *  @name DataTable.defaults.language.lengthMenu
@@ -25958,7 +25958,7 @@ return jQuery;
 			 *      } );
 			 *    } );
 			 */
-			"sLengthMenu": "Show _MENU_ entries",
+			"sLengthMenu": "",
 	
 	
 			/**

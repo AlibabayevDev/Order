@@ -10,6 +10,7 @@ namespace Order.Core.Domain.Entities
     {
         public string Number { get; set; }
         public DateTime Date { get; set; }
+        public ProviderEntity Provider =new ProviderEntity();
         public int ProviderId { get; set; }
     }
 }

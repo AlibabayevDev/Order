@@ -69,7 +69,23 @@ namespace Order.WebCore.Services.Implementations
                 var orderItem = orderItems[i];
                 var orderItemModel = orderItemMapper.Map(orderItem);
 
-                orderItemModel.No = i + 1;
+                orderItemModels.Add(orderItemModel);
+            }
+
+            return orderItemModels;
+        }
+
+        public List<OrderItemModel> GetById(int id)
+        {
+            var orderItems = db.OrderItemRepository.GetById(id);
+
+            List<OrderItemModel> orderItemModels = new List<OrderItemModel>();
+
+            for (int i = 0; i < orderItems.Count; i++)
+            {
+                var orderItem = orderItems[i];
+                var orderItemModel = orderItemMapper.Map(orderItem);
+
                 orderItemModels.Add(orderItemModel);
             }
 
