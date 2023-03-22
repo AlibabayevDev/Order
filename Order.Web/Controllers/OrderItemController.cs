@@ -83,29 +83,21 @@ namespace Order.Web.Controllers
             model.OrderItem.OrderId = model.Order.Id;
             try
             {
-                //if (ModelState.IsValid == false)
-                //{
-                //    var errors = ModelState.SelectMany(x => x.Value.Errors).Select(x => x.ErrorMessage).ToList();
-                //    var errorMessage = errors.Aggregate((message, value) =>
-                //    {
-                //        if (message.Length == 0)
-                //            return value;
+                if(model.Order.Number!=model.OrderItem.Name)
+                {
+                    service.OrderItemService.Save(model.OrderItem);
+                    TempData["Message"] = "Операция успешно";
+                }
+                else
+                {
+                    TempData["Message"] = "Номер заказа не может быть равен называнию заказа";
+                }
 
-                //        return message + ", " + value;
-                //    });
-
-                //    TempData["Message"] = errorMessage;
-                //    return RedirectToAction("Index");
-                //}
-
-                service.OrderItemService.Save(model.OrderItem);
-
-                TempData["Message"] = "Operation successfully";
             }
             catch (Exception exc)
             {
 
-                TempData["Message"] = "Operation unsuccessfully";
+                TempData["Message"] = "Операция неудачно";
             }
 
             return RedirectToAction("OrderItems", new { orderId = model.Order.Id });
@@ -124,7 +116,7 @@ namespace Order.Web.Controllers
             return RedirectToAction("OrderItems", new { orderId = orderItem.OrderId });
         }
 
-
+        [HttpGet]
         public IActionResult OrderItems(int orderId)
         {
             var orderItems = service.OrderItemService.GetById(orderId);
@@ -134,6 +126,11 @@ namespace Order.Web.Controllers
                 OrderItems = orderItems,
                 Order=order
             };
+
+            if (TempData["Message"] != null)
+            {
+                ViewBag.Message = TempData["Message"].ToString();
+            }
 
             return View("Index", viewModel);
         }

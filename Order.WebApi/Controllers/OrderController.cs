@@ -94,9 +94,9 @@ namespace Order.WebApi.Controllers
         {
             try
             {
-                var bank = OrderService.Get(id);
+                var order = OrderService.Get(id);
 
-                if (bank == null)
+                if (order == null)
                     return BadRequest("No such a bank found to delete");
 
                 OrderService.Delete(id);
@@ -106,6 +106,45 @@ namespace Order.WebApi.Controllers
             catch
             {
                 return BadRequest("Failed to delete");
+            }
+        }
+
+        [HttpPost]
+        [Route("SortDate")]
+        public IActionResult SortDate(OrderViewModel model)
+        {
+            try
+            {
+                var orderModels = OrderService.GetAll();
+
+                if (orderModels == null)
+                    return BadRequest("No such a order found");
+
+                IEnumerable<OrderModel> sortModels;
+                if (model.SortDate1.ToString() == "01.01.0001 0:00:00" && model.SortDate2.ToString() == "01.01.0001 0:00:00")
+                {
+                    sortModels = orderModels.Where(x => (x.Date >= DateTime.Now.AddMonths(-1)));
+                    return Ok(sortModels);
+                }
+                else if (model.SortDate1.ToString() == "01.01.0001 0:00:00")
+                {
+                    sortModels = orderModels.Where(x => (x.Date <= model.SortDate2));
+                    return Ok(sortModels);
+                }
+                else if (model.SortDate2.ToString() == "01.01.0001 0:00:00")
+                {
+                    sortModels = sortModels = orderModels.Where(x => (x.Date >= model.SortDate1));
+                    return Ok(sortModels);
+                }
+                else
+                {
+                    sortModels=orderModels.Where(x => (x.Date >= model.SortDate1 && x.Date <= model.SortDate2));
+                    return Ok(sortModels);
+                }
+            }
+            catch
+            {
+                return BadRequest("Failed");
             }
         }
     }

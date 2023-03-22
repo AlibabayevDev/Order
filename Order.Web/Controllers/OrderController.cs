@@ -40,6 +40,7 @@ namespace Order.Web.Controllers
         [HttpGet]
         public IActionResult Add(int id)
         {
+            
             SaveOrderViewModel viewModel = new SaveOrderViewModel();
 
             var providers = service.ProviderService.GetAll();
@@ -73,7 +74,6 @@ namespace Order.Web.Controllers
             return PartialView(viewModel);
         }
 
-
         [HttpPost]
         public IActionResult Add(SaveOrderViewModel model)
         {
@@ -97,13 +97,28 @@ namespace Order.Web.Controllers
 
             return RedirectToAction("Index");
         }
+
+        [HttpPost]
         public IActionResult Update(SaveOrderViewModel model)
         {
             try
             {
-                service.OrderService.Save(model.Order);
-                TempData["Message"] = "Операция успешно";
-                
+                var temp=service.OrderService.CheckId(model.Order);
+                var temp1 = service.OrderService.Check(model.Order);
+                if(temp==true)
+                {
+                    service.OrderService.Save(model.Order);
+                    TempData["Message"] = "Операция успешно";
+                }
+                else if(temp1==false)
+                {
+                    service.OrderService.Save(model.Order);
+                    TempData["Message"] = "Операция успешно";
+                }
+                else
+                {
+                    TempData["Message"] = "Заказ от этого поставщика существует";
+                }
             }
             catch (Exception exc)
             {
@@ -112,7 +127,6 @@ namespace Order.Web.Controllers
 
             return RedirectToAction("Index");
         }
-
 
         [HttpPost]
         public IActionResult Delete(OrderViewModel viewModel)
@@ -125,7 +139,6 @@ namespace Order.Web.Controllers
 
             return RedirectToAction("Index");
         }
-
 
         [HttpGet]
         public IActionResult SortDate(OrderViewModel model)

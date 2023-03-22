@@ -84,5 +84,19 @@ namespace Order.WebCore.Services.Implementations
                 return true;
             }
         }
+        public bool CheckId(OrderModel order)
+        {
+            var entity = db.OrderRepository.CheckOrderId(order.Id,order.ProviderId, order.Number);
+            var model=orderMapper.Map(entity);
+            if (model.Id == 0)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
     }
 }

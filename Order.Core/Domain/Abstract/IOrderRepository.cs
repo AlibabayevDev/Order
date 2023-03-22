@@ -10,5 +10,6 @@ namespace Order.Core.Domain.Abstract
     public interface IOrderRepository : ICrudRepository<OrderEntity>
     {
         OrderEntity CheckOrder(int ProviderId,string OrderNumber);
+        OrderEntity CheckOrderId(int OrderId, int ProviderId, string OrderNumber);
     }
 }

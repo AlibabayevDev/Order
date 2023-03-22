@@ -138,5 +138,32 @@ namespace Order.Core.DataAccess.Sql
                 }
             }
         }
+
+        public OrderEntity CheckOrderId(int OrderId,int ProviderId, string OrderNumber)
+        {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = "select * from Orders where ProviderId = @ProviderId AND Number=@OrderNumber AND @Id=Id";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("ProviderId", ProviderId);
+                    command.Parameters.AddWithValue("OrderNumber", OrderNumber);
+                    command.Parameters.AddWithValue("Id", OrderId);
+
+                    SqlDataReader reader = command.ExecuteReader();
+                    OrderEntity entity = new OrderEntity();
+                    while (reader.Read())
+                    {
+                        entity.Id = Convert.ToInt32(reader["Id"]);
+                        entity.Number = Convert.ToString(reader["Number"]);
+                        entity.Date = Convert.ToDateTime(reader["Date"]);
+                        entity.ProviderId = Convert.ToInt32(reader["ProviderId"]);
+
+                    }
+                    return entity;
+                }
+            }
+        }
     }
 }
