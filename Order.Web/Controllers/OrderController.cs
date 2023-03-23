@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
 using Order.Web.Models;
 using Order.WebCore.Mappers;
 using Order.WebCore.Models;
@@ -8,6 +9,7 @@ using Order.WebCore.Services.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 
 namespace Order.Web.Controllers
 {
@@ -22,7 +24,22 @@ namespace Order.Web.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            var orderModels = service.OrderService.GetAll();
+            var orderModels = new List<OrderModel>();
+
+            using (var httpClient = new HttpClient())
+            {
+                using (var response = httpClient.GetAsync("https://localhost:7018/api/Order/").Result)
+                {
+                    if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        string apiResponse = response.Content.ReadAsStringAsync().Result;
+                        orderModels = JsonConvert.DeserializeObject<List<OrderModel>>(apiResponse);
+                    }
+                    else
+                        ViewBag.StatusCode = response.StatusCode;
+                }
+
+            }
 
             OrderViewModel viewModel = new OrderViewModel()
             {
@@ -49,7 +66,21 @@ namespace Order.Web.Controllers
 
             if (id != 0)
             {
-                var order = service.OrderService.Get(id);
+                var order = new OrderModel();
+                using (var httpClient = new HttpClient())
+                {
+                    using (var response = httpClient.GetAsync("https://localhost:7018/api/Order/GetById/"+id).Result)
+                    {
+                        if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                        {
+                            string apiResponse = response.Content.ReadAsStringAsync().Result;
+                            order = JsonConvert.DeserializeObject<OrderModel>(apiResponse);
+                        }
+                        else
+                            ViewBag.StatusCode = response.StatusCode;
+                    }
+
+                }
                 viewModel.Order = order;
             }
 
@@ -67,7 +98,21 @@ namespace Order.Web.Controllers
 
             if (id != 0)
             {
-                var order = service.OrderService.Get(id);
+                var order = new OrderModel();
+                using (var httpClient = new HttpClient())
+                {
+                    using (var response = httpClient.GetAsync("https://localhost:7018/api/Order/GetById/" + id).Result)
+                    {
+                        if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                        {
+                            string apiResponse = response.Content.ReadAsStringAsync().Result;
+                            order = JsonConvert.DeserializeObject<OrderModel>(apiResponse);
+                        }
+                        else
+                            ViewBag.StatusCode = response.StatusCode;
+                    }
+
+                }
                 viewModel.Order = order;
             }
 
@@ -134,8 +179,13 @@ namespace Order.Web.Controllers
             var deletedId = viewModel.Deleted.Id;
 
             service.OrderService.Delete(deletedId);
-
-            TempData["Message"] = "Operation successfully";
+            using (var httpClient = new HttpClient())
+            {
+                using (var response = httpClient.GetAsync("https://localhost:7018/api/Order/Delete/" + deletedId).Result)
+                {
+                    TempData["Message"] = "Operation successfully";
+                }
+            }
 
             return RedirectToAction("Index");
         }
@@ -144,24 +194,27 @@ namespace Order.Web.Controllers
         public IActionResult SortDate(OrderViewModel model)
         {
             var orderModels = service.OrderService.GetAll();
-            IEnumerable<OrderModel> sortModels;
-            if (model.SortDate1.ToString() == "01.01.0001 0:00:00" && model.SortDate2.ToString() == "01.01.0001 0:00:00")
+            IEnumerable<OrderModel> sortModels = null;
+            using (var httpClient = new HttpClient())
             {
-                sortModels = orderModels.Where(x => (x.Date >= DateTime.Now.AddMonths(-1)));
-            }
-            else if (model.SortDate1.ToString() == "01.01.0001 0:00:00")
-            {
-                sortModels = orderModels.Where(x => (x.Date <= model.SortDate2));
-            }
-            else if (model.SortDate2.ToString() == "01.01.0001 0:00:00")
-            {
-                sortModels = orderModels.Where(x => (x.Date >= model.SortDate1));
-            }
-            else
-            {
-                sortModels = orderModels.Where(x => (x.Date >= model.SortDate1 && x.Date <= model.SortDate2));
+                using (var response = httpClient.GetAsync("https://localhost:7018/api/Order/SortDate?SortDate1="+model.SortDate1.ToString("yyyy-MM-dd")+"&SortDate2="+model.SortDate2.ToString("yyyy-MM-dd")).Result)
+                {
+                    if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        string apiResponse = response.Content.ReadAsStringAsync().Result;
+                        sortModels = JsonConvert.DeserializeObject<List<OrderModel>>(apiResponse);
+                    }
+                    else
+                    {
+                        ViewBag.StatusCode = response.StatusCode;
+                    }
+                }
             }
 
+            if(sortModels == null)
+            {
+                sortModels = new List<OrderModel>();
+            }
 
             var viewModel = new OrderViewModel()
             {

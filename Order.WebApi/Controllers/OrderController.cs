@@ -22,9 +22,9 @@ namespace Order.WebApi.Controllers
         {
             try
             {
-                var banks = OrderService.GetAll();
+                var orders = OrderService.GetAll();
 
-                return Ok(banks);
+                return Ok(orders);
             }
             catch
             {
@@ -38,12 +38,12 @@ namespace Order.WebApi.Controllers
         {
             try
             {
-                var bank = OrderService.Get(id);
+                var order = OrderService.Get(id);
 
-                if (bank == null)
+                if (order == null)
                     return BadRequest("No Bank found with given id");
 
-                return Ok(bank);
+                return Ok(order);
             }
             catch
             {
@@ -97,7 +97,7 @@ namespace Order.WebApi.Controllers
                 var order = OrderService.Get(id);
 
                 if (order == null)
-                    return BadRequest("No such a bank found to delete");
+                    return BadRequest("No such a order found to delete");
 
                 OrderService.Delete(id);
 
@@ -109,9 +109,9 @@ namespace Order.WebApi.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("SortDate")]
-        public IActionResult SortDate(OrderViewModel model)
+        public IActionResult SortDate(DateTime SortDate1,DateTime SortDate2)
         {
             try
             {
@@ -121,24 +121,24 @@ namespace Order.WebApi.Controllers
                     return BadRequest("No such a order found");
 
                 IEnumerable<OrderModel> sortModels;
-                if (model.SortDate1.ToString() == "01.01.0001 0:00:00" && model.SortDate2.ToString() == "01.01.0001 0:00:00")
+                if (SortDate1.ToString() == "01.01.0001 0:00:00" && SortDate2.ToString() == "01.01.0001 0:00:00")
                 {
                     sortModels = orderModels.Where(x => (x.Date >= DateTime.Now.AddMonths(-1)));
                     return Ok(sortModels);
                 }
-                else if (model.SortDate1.ToString() == "01.01.0001 0:00:00")
+                else if (SortDate1.ToString() == "01.01.0001 0:00:00")
                 {
-                    sortModels = orderModels.Where(x => (x.Date <= model.SortDate2));
+                    sortModels = orderModels.Where(x => (x.Date <= SortDate2));
                     return Ok(sortModels);
                 }
-                else if (model.SortDate2.ToString() == "01.01.0001 0:00:00")
+                else if (SortDate2.ToString() == "01.01.0001 0:00:00")
                 {
-                    sortModels = sortModels = orderModels.Where(x => (x.Date >= model.SortDate1));
+                    sortModels = sortModels = orderModels.Where(x => (x.Date >= SortDate1));
                     return Ok(sortModels);
                 }
                 else
                 {
-                    sortModels=orderModels.Where(x => (x.Date >= model.SortDate1 && x.Date <= model.SortDate2));
+                    sortModels=orderModels.Where(x => (x.Date >= SortDate1 && x.Date <= SortDate2));
                     return Ok(sortModels);
                 }
             }
