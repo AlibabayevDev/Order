@@ -67,11 +67,11 @@ namespace Order.WebApi.Controllers
         }
 
         [HttpPut("{id:int}")]
-        public IActionResult UpdateEmployee(int id, OrderModel bankModel)
+        public IActionResult Update(int id, OrderModel orderModel)
         {
             try
             {
-                if (id != bankModel.Id)
+                if (id != orderModel.Id)
                     return BadRequest("BankModel ID mismatch");
 
                 var bankToUpdate = OrderService.Get(id);
@@ -79,7 +79,7 @@ namespace Order.WebApi.Controllers
                 if (bankToUpdate == null)
                     return NotFound($"Employee with Id = {id} not found");
 
-                OrderService.Save(bankModel);
+                OrderService.Save(orderModel);
 
                 return Ok("Successfully Updated");
             }
